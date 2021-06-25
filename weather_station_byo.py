@@ -10,6 +10,8 @@ CM_IN_A_KM = 100000.0
 SECS_IN_A_HOUR = 3600
 BUCKET_SIZE = 0.2794     # Volume of rain required to tip rain meter 1 time
 
+temp_probe = ds18b20_therm.DS18B20()
+
 store_speeds = []
 store_directions = []
 
@@ -23,7 +25,6 @@ rain_count = 0           # Counts rain bucket tips
 def spin():
     global wind_count
     wind_count = wind_count + 1
-    #print("spin" + str(wind_count))
 
 # Calculate the wind speed
 def calculate_speed(time_sec):
@@ -68,17 +69,29 @@ while True:
         
         final_speed = calculate_speed(wind_interval)
         store_speeds.append(final_speed)
-    wind_average = wind_direction_byo.get_average(store_directions)
 
-    wind_gust = max(store_speeds)
-    wind_speed = statistics.mean(store_speeds)
+    wind_speed = round(statistics.mean(store_speeds), 1)
+    wind_gust = round(max(store_speeds), 1)
     rainfall = rain_count * BUCKET_SIZE
-    reset_rainfall()
-
-    humidity, pressure, ambient_temp = bme280_sensor.read_all()
+    wind_direction = wind_direction_byo.get_average(store_directions)
+    ground_temp = temp_probe.read_temp()
     
-    print(wind_speed, wind_gust, rainfall, wind_average, humidity, pressure, ambient_temp)
+    humidity, pressure, ambient_temp = bme280_sensor.read_all()
 
+    # Round wind_direction, humidity, pressure, ambient_temp, and ground_temp to 1 decimals
+    wind_direction = round(wind_direction)
+    humidity = round(humidity, 1)
+    pressure = round(pressure, 1)
+    ambient_temp = round(ambient_temp, 1)
+    ground_temp = round(ground_temp, 1)
+    
+    
+    print(wind_speed, wind_gust, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp)
+
+    #print(ground_temp)
+
+    # Reset wind speed list, wind direction list, and rainfall max
     store_speeds = []
     store_directions = []
+    reset_rainfall()
     
