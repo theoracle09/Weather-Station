@@ -88,12 +88,13 @@ while True:
     
     humidity, pressure, ambient_temp = bme280_sensor.read_all()
 
-    # Round wind_direction, humidity, pressure, ambient_temp, and ground_temp to 1 decimals
+    # Round wind_direction, humidity, pressure, ambient_temp, and ground_temp to 1 decimals 
+    # and convert C readings to F
     wind_direction = round(wind_direction)
     humidity = round(humidity, 1)
     pressure = round(pressure, 1)
-    ambient_temp = round(ambient_temp, 1)
-    ground_temp = round(ground_temp, 1)
+    ambient_temp = celsius_to_f(round(ambient_temp, 1))
+    ground_temp = celsius_to_f(round(ground_temp, 1))
     
     
     print(wind_speed, wind_gust, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp)
