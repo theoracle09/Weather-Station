@@ -60,11 +60,11 @@ def get_value(length = 5):
 
     return get_average(data)
 
-
-""" while True:
+# Testing
+"""while True:
     wind = round(adc.value * 3.3, 1)
     direction = volts.get(wind)
     if direction:
         print("found " + str(wind) + " " + str(volts[wind]))
     else:
-        print("unknown value: " + str(wind)) """
+        print("unknown value: " + str(wind))""" 

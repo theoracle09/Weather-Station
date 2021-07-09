@@ -5,6 +5,7 @@ import statistics
 import bme280_sensor
 import wind_direction_byo
 import ds18b20_therm
+import database
 
 # Constant variable definition
 CM_IN_A_KM = 100000.0
@@ -68,6 +69,9 @@ rain_sensor.when_activated = bucket_tipped
 wind_speed_sensor = Button(5)
 wind_speed_sensor.when_activated = spin
 
+# Define database
+db = database.weather_database()
+
 # Main loop
 while True:
     start_time = time.time()
@@ -99,7 +103,8 @@ while True:
     
     print(wind_speed, wind_gust, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp)
 
-    #print(ground_temp)
+    # Record to database
+    db.insert(ambient_temp, ground_temp, 0, pressure, humidity, wind_direction, wind_speed, wind_gust, rainfall)
 
     # Reset wind speed list, wind direction list, and rainfall max
     store_speeds = []
