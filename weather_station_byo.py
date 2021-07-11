@@ -8,6 +8,7 @@ import ds18b20_therm
 import database
 import paho.mqtt.client as mqtt
 import json
+from datetime import datetime
 
 # Constant variable definition
 CM_IN_A_KM = 100000.0
@@ -34,7 +35,7 @@ def on_connect(client, userdata, flags, rc):
 
 client = mqtt.Client()
 client.on_connect = on_connect
-client.connect("192.168.1.16", 1883, 60)
+client.connect("192.168.1.16", 1883)
 
 # Every half-rotation, add 1 to count
 def spin():
@@ -80,7 +81,7 @@ wind_speed_sensor = Button(5)
 wind_speed_sensor.when_activated = spin
 
 # Define database
-db = database.weather_database()
+#db = database.weather_database()
 
 # Main loop
 while True:
@@ -111,9 +112,15 @@ while True:
     ground_temp = celsius_to_f(round(ground_temp, 1))
     rainfall = round(rainfall, 1)
     
-    print(wind_speed, wind_gust, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp)
+    # Record current date and time
+    now = datetime.now()
 
-    # Create JSON object for MQTT transmission
+    # dd/mm/YY H:M:S
+    last_message = now.strftime("%m/%d/%Y %H:%M:%S")
+
+    print(last_message, wind_speed, wind_gust, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp)
+
+    # Create JSON dict for MQTT transmission
     send_msg = {
         'wind_speed': wind_speed,
         'wind_gust': wind_gust,
@@ -122,17 +129,18 @@ while True:
         'humidity': humidity,
         'pressure': pressure,
         'ambient_temp': ambient_temp,
-        'ground_temp': ground_temp
+        'ground_temp': ground_temp,
+        'last_message': last_message
     }
 
     # Convert message to json
     payload = json.dumps(send_msg)
 
     # Publish to mqtt
-    client.publish("raspberry/ws/sensors", payload, qos=1)
+    client.publish("raspberry/ws/sensors", payload, qos=0)
 
     # Record to database
-    db.insert(ambient_temp, ground_temp, 0, pressure, humidity, wind_direction, wind_speed, wind_gust, rainfall)
+    #db.insert(ambient_temp, ground_temp, 0, pressure, humidity, wind_direction, wind_speed, wind_gust, rainfall)
 
     # Reset wind speed list, wind direction list, and rainfall max
     store_speeds = []
