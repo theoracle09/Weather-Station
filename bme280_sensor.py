@@ -12,8 +12,15 @@ def read_all():
     bme280_data = bme280.sample(bus,address)
     return bme280_data.humidity, bme280_data.pressure, bme280_data.temperature
 
-# Testing 
-"""while True:
-    print(read_all())
-    sleep(1)"""
+def main():
+    while True:
+        print(read_all())
+        sleep(1)
+
+if __name__=="__main__":
+    main()
+
+
+
+
     

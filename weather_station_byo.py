@@ -1,4 +1,5 @@
 from gpiozero import Button
+from gpiozero import CPUTemperature
 import time
 import math
 import statistics
@@ -54,12 +55,21 @@ def calculate_speed(time_sec):
     km_per_sec = dist_km / time_sec
     km_per_hour = 1.18 * (km_per_sec * SECS_IN_A_HOUR) # Multiply wind speed by 'anemometer factor'
 
-    return km_per_hour
+    # Convert KMH to MPH
+    mph = 0.6214 * km_per_hour
+
+    return mph
 
 # Convert C to F
 def celsius_to_f(temp_c):
     f = (temp_c * 9/5) + 32
     return f
+
+# Convert mm to inches
+def mm2inches(mm):
+    inches = mm * 0.0393701
+    inches = round(inches,4)
+    return inches
 
 # Reset functions
 def reset_wind():
@@ -79,6 +89,9 @@ rain_sensor.when_activated = bucket_tipped
 
 wind_speed_sensor = Button(5)
 wind_speed_sensor.when_activated = spin
+
+# Read CPU temp for possible fan logic
+cpu = CPUTemperature()
 
 # Define database
 #db = database.weather_database()
@@ -110,7 +123,9 @@ while True:
     pressure = round(pressure, 1)
     ambient_temp = celsius_to_f(round(ambient_temp, 1))
     ground_temp = celsius_to_f(round(ground_temp, 1))
-    rainfall = round(rainfall, 1)
+    rainfall = mm2inches(rainfall)
+
+    cpu_temp = celsius_to_f(round(cpu.temperature, 1))
     
     # Record current date and time
     now = datetime.now()
@@ -118,7 +133,8 @@ while True:
     # dd/mm/YY H:M:S
     last_message = now.strftime("%m/%d/%Y %H:%M:%S")
 
-    print(last_message, wind_speed, wind_gust, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp)
+    # Debugging
+    #print(last_message, wind_speed, wind_gust, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp)
 
     # Create JSON dict for MQTT transmission
     send_msg = {
@@ -130,7 +146,8 @@ while True:
         'pressure': pressure,
         'ambient_temp': ambient_temp,
         'ground_temp': ground_temp,
-        'last_message': last_message
+        'last_message': last_message,
+        'cpu_temp': cpu_temp
     }
 
     # Convert message to json
