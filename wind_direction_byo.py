@@ -50,7 +50,7 @@ def get_average(angles):
 
 def get_value(length = 5):
     data = []
-    print("Measuring wind direction for %d seconds..." % length)
+    #print("Measuring wind direction for %d seconds..." % length)
     start_time = time.time()
 
     while time.time() - start_time <= length:
