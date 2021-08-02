@@ -41,5 +41,8 @@ class DS18B20(object):
         return temp_c
 
 if __name__ == "__main__":
-    obj = DS18B20()
-    print("Temp: %s C" % obj.read_temp())
+
+    while True:
+        obj = DS18B20()
+        print("Temp: %s C" % obj.read_temp())
+        time.sleep(1)
