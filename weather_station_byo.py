@@ -6,7 +6,7 @@ import statistics
 import bme280_sensor
 import wind_direction_byo
 import ds18b20_therm
-import database
+#import database
 import paho.mqtt.client as mqtt
 import json
 from datetime import datetime

@@ -58,7 +58,7 @@ def get_value(length = 5):
         if wind in volts:
             data.append(volts[wind])
 
-    return get_average(data)
+    return get_average(data)       
 
 # Testing
 if __name__ == "__main__":
@@ -69,3 +69,5 @@ if __name__ == "__main__":
             print("found " + str(wind) + " " + str(volts[wind]))
         else:
             print("unknown value: " + str(wind))
+        
+        time.sleep(1)
