@@ -1,4 +1,4 @@
 # Exclude logs
-/logs/*.log
+/logs/*.txt
 
 __pycache__/
