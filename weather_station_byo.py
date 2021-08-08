@@ -6,7 +6,6 @@ import statistics
 import bme280_sensor
 import wind_direction_byo
 import ds18b20_therm
-#import database
 import paho.mqtt.client as mqtt
 import json
 from datetime import datetime
@@ -93,11 +92,8 @@ rain_sensor.when_activated = bucket_tipped
 wind_speed_sensor = Button(5)
 wind_speed_sensor.when_activated = spin
 
-# Read CPU temp for possible fan logic
+# Read CPU temp for future fan logic
 cpu = CPUTemperature()
-
-# Define database
-#db = database.weather_database()
 
 # Main loop
 if __name__ == '__main__':
@@ -131,13 +127,13 @@ if __name__ == '__main__':
 
         cpu_temp = celsius_to_f(round(cpu.temperature, 1))
         
-        # Record current date and time
+        # Record current date and time for message timestamp
         now = datetime.now()
 
-        # dd/mm/YY H:M:S
+        # Format message timestamp to dd/mm/YY H:M:S
         last_message = now.strftime("%m/%d/%Y %H:%M:%S")
 
-        # Debugging
+        # Debugging (used when testing and need to print variables)
         #print(last_message, wind_speed, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp)
 
         # Create JSON dict for MQTT transmission
@@ -158,9 +154,6 @@ if __name__ == '__main__':
 
         # Publish to mqtt
         client.publish("raspberry/ws/sensors", payload, qos=0)
-
-        # Record to database
-        #db.insert(ambient_temp, ground_temp, 0, pressure, humidity, wind_direction, wind_speed, rainfall)
 
         # Reset wind speed list, wind direction list, and rainfall max
         store_speeds = []
