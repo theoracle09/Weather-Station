@@ -114,7 +114,6 @@ if __name__ == '__main__':
             store_speeds.append(final_speed)
 
         wind_speed = round(statistics.mean(store_speeds), 1)
-        wind_gust = round(max(store_speeds), 1)
         rainfall = rain_count * BUCKET_SIZE
         wind_direction = wind_direction_byo.get_average(store_directions)
         ground_temp = temp_probe.read_temp()
@@ -139,12 +138,11 @@ if __name__ == '__main__':
         last_message = now.strftime("%m/%d/%Y %H:%M:%S")
 
         # Debugging
-        #print(last_message, wind_speed, wind_gust, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp)
+        #print(last_message, wind_speed, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp)
 
         # Create JSON dict for MQTT transmission
         send_msg = {
             'wind_speed': wind_speed,
-            'wind_gust': wind_gust,
             'rainfall': rainfall,
             'wind_direction': wind_direction,
             'humidity': humidity,
@@ -162,7 +160,7 @@ if __name__ == '__main__':
         client.publish("raspberry/ws/sensors", payload, qos=0)
 
         # Record to database
-        #db.insert(ambient_temp, ground_temp, 0, pressure, humidity, wind_direction, wind_speed, wind_gust, rainfall)
+        #db.insert(ambient_temp, ground_temp, 0, pressure, humidity, wind_direction, wind_speed, rainfall)
 
         # Reset wind speed list, wind direction list, and rainfall max
         store_speeds = []
