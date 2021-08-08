@@ -3,12 +3,22 @@
 ## TODO
 
 - Make feature list / section
-- Make hardware list / section
 - Make future features list / section (if any)
 
 ## About
 
 This project takes the [offical Raspberry Pi Weather Station](https://projects.raspberrypi.org/en/projects/build-your-own-weather-station) and removes all the extra files dealing with Oracle. Instead of uploading to a web server, this broadcasts sensor data as a JSON object via MQTT to my home assistant installation.
+
+## Feature List
+
+- Local pressure
+- Local humidity
+- local temperature
+- local rainfall in inches
+- local wind direction
+- local wind speed
+- local wind gust (calculated in Home Assistant)
+- local hourly, daily, and weekly rainfall (calculated in Home Assistant)
 
 ## Hardware List
 
@@ -70,6 +80,3 @@ Restart the pi and once the network services are loaded, the script should run a
 ```
 sudo systemctl status weatherstation.service
 ```
-
-## Home Assistant Setup
-
