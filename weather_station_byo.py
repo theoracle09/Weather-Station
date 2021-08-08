@@ -32,7 +32,10 @@ rain_count = 0           # Counts rain bucket tips
 
 #Connect to MQTT
 def on_connect(client, userdata, flags, rc):
-    print(f"Connected with result code {rc}")
+    if rc==0:
+        print("Connected OK. Returned code=",rc)
+    else:
+        print("Bad connection. Returned code=",rc)
 
 client = mqtt.Client()
 client.on_connect = on_connect
@@ -97,70 +100,72 @@ cpu = CPUTemperature()
 #db = database.weather_database()
 
 # Main loop
-while True:
-    start_time = time.time()
-    while time.time() - start_time <= interval:
-        wind_start_time = time.time()
-        reset_wind()
-        while time.time() - wind_start_time <= wind_interval:
-            store_directions.append(wind_direction_byo.get_value())
+if __name__ == '__main__':
+
+    while True:
+        start_time = time.time()
+        while time.time() - start_time <= interval:
+            wind_start_time = time.time()
+            reset_wind()
+            while time.time() - wind_start_time <= wind_interval:
+                store_directions.append(wind_direction_byo.get_value())
+            
+            final_speed = calculate_speed(wind_interval)
+            store_speeds.append(final_speed)
+
+        wind_speed = round(statistics.mean(store_speeds), 1)
+        wind_gust = round(max(store_speeds), 1)
+        rainfall = rain_count * BUCKET_SIZE
+        wind_direction = wind_direction_byo.get_average(store_directions)
+        ground_temp = temp_probe.read_temp()
         
-        final_speed = calculate_speed(wind_interval)
-        store_speeds.append(final_speed)
+        humidity, pressure, ambient_temp = bme280_sensor.read_all()
 
-    wind_speed = round(statistics.mean(store_speeds), 1)
-    wind_gust = round(max(store_speeds), 1)
-    rainfall = rain_count * BUCKET_SIZE
-    wind_direction = wind_direction_byo.get_average(store_directions)
-    ground_temp = temp_probe.read_temp()
-    
-    humidity, pressure, ambient_temp = bme280_sensor.read_all()
+        # Round wind_direction, humidity, pressure, ambient_temp, ground_temp, and rainfall to 1 decimals 
+        # and convert C readings to F
+        wind_direction = round(wind_direction)
+        humidity = round(humidity, 1)
+        pressure = round(pressure, 1)
+        ambient_temp = celsius_to_f(round(ambient_temp, 1))
+        ground_temp = celsius_to_f(round(ground_temp, 1))
+        rainfall = mm2inches(rainfall)
 
-    # Round wind_direction, humidity, pressure, ambient_temp, ground_temp, and rainfall to 1 decimals 
-    # and convert C readings to F
-    wind_direction = round(wind_direction)
-    humidity = round(humidity, 1)
-    pressure = round(pressure, 1)
-    ambient_temp = celsius_to_f(round(ambient_temp, 1))
-    ground_temp = celsius_to_f(round(ground_temp, 1))
-    rainfall = mm2inches(rainfall)
+        cpu_temp = celsius_to_f(round(cpu.temperature, 1))
+        
+        # Record current date and time
+        now = datetime.now()
 
-    cpu_temp = celsius_to_f(round(cpu.temperature, 1))
-    
-    # Record current date and time
-    now = datetime.now()
+        # dd/mm/YY H:M:S
+        last_message = now.strftime("%m/%d/%Y %H:%M:%S")
 
-    # dd/mm/YY H:M:S
-    last_message = now.strftime("%m/%d/%Y %H:%M:%S")
+        # Debugging
+        #print(last_message, wind_speed, wind_gust, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp)
 
-    # Debugging
-    #print(last_message, wind_speed, wind_gust, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp)
+        # Create JSON dict for MQTT transmission
+        send_msg = {
+            'wind_speed': wind_speed,
+            'wind_gust': wind_gust,
+            'rainfall': rainfall,
+            'wind_direction': wind_direction,
+            'humidity': humidity,
+            'pressure': pressure,
+            'ambient_temp': ambient_temp,
+            'ground_temp': ground_temp,
+            'last_message': last_message,
+            'cpu_temp': cpu_temp
+        }
 
-    # Create JSON dict for MQTT transmission
-    send_msg = {
-        'wind_speed': wind_speed,
-        'wind_gust': wind_gust,
-        'rainfall': rainfall,
-        'wind_direction': wind_direction,
-        'humidity': humidity,
-        'pressure': pressure,
-        'ambient_temp': ambient_temp,
-        'ground_temp': ground_temp,
-        'last_message': last_message,
-        'cpu_temp': cpu_temp
-    }
+        # Convert message to json
+        payload = json.dumps(send_msg)
 
-    # Convert message to json
-    payload = json.dumps(send_msg)
+        # Publish to mqtt
+        client.publish("raspberry/ws/sensors", payload, qos=0)
 
-    # Publish to mqtt
-    client.publish("raspberry/ws/sensors", payload, qos=0)
+        # Record to database
+        #db.insert(ambient_temp, ground_temp, 0, pressure, humidity, wind_direction, wind_speed, wind_gust, rainfall)
 
-    # Record to database
-    #db.insert(ambient_temp, ground_temp, 0, pressure, humidity, wind_direction, wind_speed, wind_gust, rainfall)
-
-    # Reset wind speed list, wind direction list, and rainfall max
-    store_speeds = []
-    store_directions = []
-    reset_rainfall()
+        # Reset wind speed list, wind direction list, and rainfall max
+        store_speeds = []
+        store_directions = []
+        reset_rainfall()
     
