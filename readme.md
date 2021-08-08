@@ -14,8 +14,8 @@ This project takes the [offical Raspberry Pi Weather Station](https://projects.r
 
 These were the steps I had to take so the weather station script will run on boot. SSH into your raspberry pi and type the following to create a new system service:
 
-```console
-pi@raspberrypi:~ $ sudo nano /etc/systemd/system/weatherstation.service
+```
+sudo nano /etc/systemd/system/weatherstation.service
 ```
 
 Paste this into the new file:
@@ -37,24 +37,24 @@ WantedBy=multi-user.target
 
 Systemd needs to be made aware of the configuration change. Reload the systemd daemon with the following:
 
-```console
-pi@raspberrypi:~ $ sudo systemctl daemon-reload
+```
+sudo systemctl daemon-reload
 ```
 
 Enable the new weatherstation service:
 
-```console
-pi@raspberrypi:~ $ sudo systemctl enable weatherstation.service
+```
+sudo systemctl enable weatherstation.service
 ```
 
 The systemd-networkd-wait-online service needs to be enabled. Type this next:
 
-```console
-pi@raspberrypi:~ $ sudo systemctl enable systemd-networkd-wait-online.service
+```
+sudo systemctl enable systemd-networkd-wait-online.service
 ```
 
 Restart the pi and once the network services are loaded, the script should run and start broadcasting sensor data over MQTT. If it doesn't, type in this command to see the status of the service and diagnose from there.
 
-```console
-pi@raspberrypi:~ $ sudo systemctl status weatherstation.service
+```
+sudo systemctl status weatherstation.service
 ```
