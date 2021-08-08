@@ -70,3 +70,6 @@ Restart the pi and once the network services are loaded, the script should run a
 ```
 sudo systemctl status weatherstation.service
 ```
+
+## Home Assistant Setup
+
