@@ -14,12 +14,12 @@ The following sensors are broadcast as a JSON dict over MQTT, and displayed in a
 
 - Local pressure
 - Local humidity
-- local temperature
-- local rainfall in inches
-- local wind direction
-- local wind speed
-- local wind gust (calculated in Home Assistant)
-- local hourly, daily, and weekly rainfall (calculated in Home Assistant)
+- Local temperature
+- Local rainfall in inches
+- Local wind direction
+- Local wind speed
+- Local wind gust (calculated in Home Assistant)
+- Local hourly, daily, and weekly rainfall (calculated in Home Assistant)
 
 Home Assistant uses the [utitilty meter integration](https://www.home-assistant.io/integrations/utility_meter/) to track hourly, daily, and weekly rainfall. Node Red saves the max daily wind speed as wind gust to a local file so as to be persistent over Home Assistant restarts. Node Red resets the max daily wind gust every day at midnight. 
 
