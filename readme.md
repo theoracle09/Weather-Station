@@ -11,6 +11,8 @@ This project takes the [offical Raspberry Pi Weather Station](https://projects.r
 
 ## Feature List
 
+The following sensors are broadcast as a JSON dict over MQTT, and displayed in a Home Assistant dashboard:
+
 - Local pressure
 - Local humidity
 - local temperature
@@ -19,6 +21,8 @@ This project takes the [offical Raspberry Pi Weather Station](https://projects.r
 - local wind speed
 - local wind gust (calculated in Home Assistant)
 - local hourly, daily, and weekly rainfall (calculated in Home Assistant)
+
+Home Assistant uses the utitilty meter integration to track hourly, daily, and weekly rainfall. Node Red saves the max daily wind speed as wind gust to a local file so as to be persistent over Home Assistant restarts. Node Red resets the max daily wind gust every day at midnight. 
 
 ## Hardware List
 
@@ -42,7 +46,7 @@ sudo nano /etc/systemd/system/weatherstation.service
 
 Paste this into the new file:
 
-```sh
+```
 [Unit]
 Description=Weather Station Service
 Wants=systemd-networkd-wait-online.service
@@ -56,6 +60,10 @@ ExecStart=/usr/bin/python3 /home/pi/weather-station/weather_station_byo.py > /ho
 [Install]
 WantedBy=multi-user.target
 ```
+
+**NOTICE:** This program uses python3, so it's explicitly called within the ExecStart command. Also note the absolute file path to the weather station main program, along with absolute path to any error log output.
+
+TODO: The ExecStartPre command is executed because the service consistently started before the network services were active and made the program error out and fail. Having the service require a single ping out before startup ensures the pi is indeed connected to the internet before it attempts to connect via MQTT. This will most likely be changed in the future because the connection error needs to be handled at the program level, not the service level. I also don't want to rely on it connecting outside of the local network, so it should check MQTT connection status before moving to main program loop as opposed to dialing outside the network.
 
 Systemd needs to be made aware of the configuration change. Reload the systemd daemon with the following:
 

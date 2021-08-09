@@ -11,6 +11,8 @@ import json
 from datetime import datetime
 
 # Constant variable definition
+MQTT_HOST = "192.168.1.16"
+MQTT_PORT = 1883
 CM_IN_A_KM = 100000.0
 SECS_IN_A_HOUR = 3600
 BUCKET_SIZE = 0.2794     # Volume of rain required to tip rain meter one time
@@ -38,7 +40,7 @@ def on_connect(client, userdata, flags, rc):
 
 client = mqtt.Client()
 client.on_connect = on_connect
-client.connect("192.168.1.16", 1883)
+client.connect(MQTT_HOST, MQTT_PORT)
 
 # Every half-rotation, add 1 to count
 def spin():
