@@ -2,12 +2,11 @@
 
 ## TODO
 
-- Make feature list / section
 - Make future features list / section (if any)
 
 ## About
 
-This project takes the [offical Raspberry Pi Weather Station](https://projects.raspberrypi.org/en/projects/build-your-own-weather-station) and removes all the extra files dealing with Oracle. Instead of uploading to a web server, this broadcasts sensor data as a JSON object via MQTT to my home assistant installation.
+This project takes the [offical Raspberry Pi Weather Station](https://projects.raspberrypi.org/en/projects/build-your-own-weather-station) and removes all the extra files dealing with Oracle, along with some new features. The raspi broadcasts the sensor data as a JSON dict over MQTT and is displayed in a Home Assistant dashboard.
 
 ## Feature List
 
@@ -22,7 +21,7 @@ The following sensors are broadcast as a JSON dict over MQTT, and displayed in a
 - local wind gust (calculated in Home Assistant)
 - local hourly, daily, and weekly rainfall (calculated in Home Assistant)
 
-Home Assistant uses the utitilty meter integration to track hourly, daily, and weekly rainfall. Node Red saves the max daily wind speed as wind gust to a local file so as to be persistent over Home Assistant restarts. Node Red resets the max daily wind gust every day at midnight. 
+Home Assistant uses the [utitilty meter integration](https://www.home-assistant.io/integrations/utility_meter/) to track hourly, daily, and weekly rainfall. Node Red saves the max daily wind speed as wind gust to a local file so as to be persistent over Home Assistant restarts. Node Red resets the max daily wind gust every day at midnight. 
 
 ## Hardware List
 
