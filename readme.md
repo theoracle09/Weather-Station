@@ -6,7 +6,9 @@
 
 ## About
 
-This project takes the [offical Raspberry Pi Weather Station](https://projects.raspberrypi.org/en/projects/build-your-own-weather-station) and removes all the extra files dealing with Oracle, along with some new features. The raspi broadcasts the sensor data as a JSON dict over MQTT and is displayed in a Home Assistant dashboard.
+This project takes the [offical Raspberry Pi Weather Station](https://projects.raspberrypi.org/en/projects/build-your-own-weather-station) and removes all the extra files dealing with Oracle, along with some new features. The raspi broadcasts the sensor data as a JSON dict over MQTT and is displayed in a [Home Assistant](https://www.home-assistant.io/) dashboard.
+
+**NOTE:** As of now I am broadcasting on MQTT every 5 seconds and taking wind measurements every 5 seconds. Because of this, I removed the wind gust measurements from the original project, as I'm calculating this from Home Assistant.
 
 ## Feature List
 
