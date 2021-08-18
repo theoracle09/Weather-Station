@@ -1,4 +1,8 @@
 # Exclude logs
 /logs/*.txt
 
+# Exclude pycache
 __pycache__/
+
+# Exclude testing.py script
+testing.py
