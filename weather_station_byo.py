@@ -48,7 +48,7 @@ def on_disconnect(client, userdata, rc):
 client = mqtt.Client("WX")
 client.on_connect = on_connect
 client.on_disconnect = on_disconnect
-client.connect("192.168.1.16", 1883) 
+client.connect(MQTT_HOST, MQTT_PORT) 
 
 # Every half-rotation, add 1 to count
 def spin():
