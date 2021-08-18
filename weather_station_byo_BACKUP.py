@@ -10,9 +10,6 @@ import paho.mqtt.client as mqtt
 import json
 from datetime import datetime
 
-# Global variable definition
-flag_connected = 0      # Loop flag for waiting to connect to MQTT broker
-
 # Constant variable definition
 MQTT_HOST = "192.168.1.16"
 MQTT_PORT = 1883
@@ -35,19 +32,7 @@ interval = 5             # Data collection interval in secs. 5 mins = 5 * 60 = 3
 rain_count = 0           # Counts rain bucket tips
 
 #Connect to MQTT
-def on_connect(client, userdata, flags, rc):
-    print("Connected with flags [%s] rtn code [%d]"% (flags, rc) )
-    global flag_connected
-    flag_connected = 1
-
-def on_disconnect(client, userdata, rc):
-    print("disconnected with rtn code [%d]"% (rc) )
-    global flag_connected
-    flag_connected = 0
-
 client = mqtt.Client("WX")
-client.on_connect = on_connect
-client.on_disconnect = on_disconnect
 client.connect("192.168.1.16", 1883) 
 
 # Every half-rotation, add 1 to count
@@ -108,15 +93,7 @@ cpu = CPUTemperature()
 # Main loop
 if __name__ == '__main__':
 
-    client.loop_start()
-
-    # Wait to receive the connected callback for MQTT
-    while flag_connected == 0:
-        print("Not connected. Waiting 1 second.")
-        time.sleep(1)
-
     while True:
-
         start_time = time.time()
         while time.time() - start_time <= interval:
             wind_start_time = time.time()
@@ -148,7 +125,7 @@ if __name__ == '__main__':
         # Record current date and time for message timestamp
         now = datetime.now()
 
-        # Format message timestamp to mm/dd/YY H:M:S
+        # Format message timestamp to dd/mm/YY H:M:S
         last_message = now.strftime("%m/%d/%Y %H:%M:%S")
 
         # Debugging (used when testing and need to print variables)
@@ -178,7 +155,3 @@ if __name__ == '__main__':
         store_directions = []
         reset_rainfall()
     
-    client.loop_stop()
-    print("Loop Stopped.")
-    client.disconnect()
-    print("MQTT Disconnected.")
