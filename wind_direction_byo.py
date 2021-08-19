@@ -24,6 +24,7 @@ volts = {0.4: 360.0,
 
 count = 0
 
+# Wizardry. No idea what is happening here.
 def get_average(angles):
     sin_sum = 0.0
     cos_sum = 0.0
