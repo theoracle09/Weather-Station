@@ -34,7 +34,7 @@ wind_interval = 5        # How many secs to collect wind dir and speed
 interval = 5             # Data collection interval in secs. 5 mins = 5 * 60 = 300
 rain_count = 0           # Counts rain bucket tips
 
-#Connect to MQTT
+# MQTT
 def on_connect(client, userdata, flags, rc):
     print("Connected with flags [%s] rtn code [%d]"% (flags, rc) )
     global flag_connected
