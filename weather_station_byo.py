@@ -16,9 +16,11 @@ flag_connected = 0      # Loop flag for waiting to connect to MQTT broker
 # Constant variable definition
 MQTT_HOST = "192.168.1.16"
 MQTT_PORT = 1883
+BUCKET_SIZE = 0.2794     # Volume of rain required to tip rain meter one time
+RAINFALL_METRIC = 1      # Measure rainfall in inches or mm. For inches change to 0.
+
 CM_IN_A_KM = 100000.0
 SECS_IN_A_HOUR = 3600
-BUCKET_SIZE = 0.2794     # Volume of rain required to tip rain meter one time
 
 # Initialize ground temp probe
 temp_probe = ds18b20_therm.DS18B20()
@@ -141,7 +143,9 @@ if __name__ == '__main__':
         pressure = round(pressure, 1)
         ambient_temp = celsius_to_f(round(ambient_temp, 1))
         ground_temp = celsius_to_f(round(ground_temp, 1))
-        rainfall = mm2inches(rainfall)
+
+        if RAINFALL_METRIC == 0:
+            rainfall = mm2inches(rainfall)
 
         cpu_temp = celsius_to_f(round(cpu.temperature, 1))
         
