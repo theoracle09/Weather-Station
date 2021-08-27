@@ -17,7 +17,7 @@ The following sensors are broadcast as a JSON dict over MQTT, and displayed in a
 - Local pressure
 - Local humidity
 - Local temperature
-- Local rainfall in inches
+- Local rainfall (configurable inches or mm)
 - Local wind direction
 - Local wind speed
 - Local wind gust (calculated in Home Assistant)
