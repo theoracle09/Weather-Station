@@ -6,9 +6,9 @@
 
 ## About
 
-This project takes the [offical Raspberry Pi Weather Station](https://projects.raspberrypi.org/en/projects/build-your-own-weather-station) and removes all the extra files dealing with Oracle, along with some new features. The raspi broadcasts the sensor data as a JSON dict over MQTT and is displayed in a [Home Assistant](https://www.home-assistant.io/) dashboard.
+This project takes the [official Raspberry Pi Weather Station](https://projects.raspberrypi.org/en/projects/build-your-own-weather-station) and removes all the extra files dealing with Oracle, along with some new features. The raspi broadcasts the sensor data as a JSON dict over MQTT and is displayed in a [Home Assistant](https://www.home-assistant.io/) dashboard.
 
-**NOTE:** As of now I am broadcasting on MQTT every 5 seconds and taking wind measurements every 5 seconds. Because of this, I removed the wind gust measurements from the original project, as I'm calculating this from Home Assistant.
+**NOTE:** As of now I am broadcasting on MQTT every 5 seconds and taking wind measurements every 5 seconds. Because of this, I removed the wind gust measurements from the original project, as I'm calculating this from Home Assistant. This may be reimplemented in the future depending on long term performance. 
 
 ## Feature List
 
@@ -22,6 +22,8 @@ The following sensors are broadcast as a JSON dict over MQTT, and displayed in a
 - Local wind speed
 - Local wind gust (calculated in Home Assistant)
 - Local hourly, daily, and weekly rainfall (calculated in Home Assistant)
+- System CPU temperature
+- System uptime
 
 Home Assistant uses the [utitilty meter integration](https://www.home-assistant.io/integrations/utility_meter/) to track hourly, daily, and weekly rainfall. Node Red saves the max daily wind speed as wind gust to a local file so as to be persistent over Home Assistant restarts. Node Red resets the max daily wind gust every day at midnight. 
 
@@ -36,6 +38,23 @@ See the [offical Raspberry Pi Weather Station - What You Will Need](https://proj
 - 12' of 25 conductor cable for connection between sensor array and raspi box. [Something like this](https://www.amazon.com/gp/product/B00B88BFKC/ref=ppx_yo_dt_b_asin_title_o07_s00?ie=UTF8&psc=1)
 
 I also used this 3D printed [radiation shield](https://www.thingiverse.com/thing:1067700) for the BME280 sensor.
+
+## MQTT Username and Password
+
+My MQTT server requires a username and password to connect to it. I'm using environment variables to store these credentials so they're not uploaded to github. For you to do the same, you'll need to install the dotenv library:
+
+```
+sudo pip3 install -U python-dotenv
+```
+
+In your project folder create a new file ".env". This is a per-project file, so you should only need one. Hence, it doesn't need a name, simply the extension will be fine. In this file paste the following:
+
+```
+MQTT_USER="username"
+MQTT_PASSWORD="password"
+```
+
+Replace username and password with the credentials for your MQTT server. 
 
 ## Running Script When Pi Starts
 
