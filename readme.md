@@ -39,9 +39,9 @@ See the [offical Raspberry Pi Weather Station - What You Will Need](https://proj
 
 I also used this 3D printed [radiation shield](https://www.thingiverse.com/thing:1067700) for the BME280 sensor.
 
-## MQTT Username and Password
+## MQTT Configuration
 
-My MQTT server requires a username and password to connect to it. I'm using environment variables to store these credentials so they're not uploaded to github. For you to do the same, you'll need to install the dotenv library:
+The MQTT configuration requires an environment file for username, password, host ip, and port. You can hardcode these in if you really want by finding the MQTT constant variables in weather_station_byo.py and defining them there. To use the environment variables, start by installing the dotenv library by SSHing into your raspberry pi and typing the following:
 
 ```
 sudo pip3 install -U python-dotenv
@@ -52,9 +52,11 @@ In your project folder create a new file ".env". This is a per-project file, so 
 ```
 MQTT_USER="username"
 MQTT_PASSWORD="password"
+MQTT_HOST="host ip"
+MQTT_PORT=1883
 ```
 
-Replace username and password with the credentials for your MQTT server. 
+Replace username and password with the credentials for your MQTT server. Add your MQTT host IP. The default port is 1883, so if yours is different change it here.
 
 ## Running Script When Pi Starts
 

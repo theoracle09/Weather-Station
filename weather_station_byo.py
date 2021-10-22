@@ -19,13 +19,13 @@ load_dotenv(dotenv_path)
 # Load .env variables
 MQTT_USER = os.environ.get('MQTT_USER')
 MQTT_PASSWORD = os.environ.get('MQTT_PASSWORD')
+MQTT_HOST = os.environ.get('MQTT_HOST')
+MQTT_PORT = os.environ.get('MQTT_PORT')
 
 # Global variable definition
 flag_connected = 0      # Loop flag for waiting to connect to MQTT broker
 
 # Constant variable definition
-MQTT_HOST = "192.168.1.16"
-MQTT_PORT = 1883
 MQTT_TOPIC = "raspberry/ws/sensors"
 BUCKET_SIZE = 0.2794     # Volume of rain required to tip rain meter one time
 RAINFALL_METRIC = 1      # Measure rainfall in inches or mm. For inches change to 0.
