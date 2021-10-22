@@ -20,7 +20,7 @@ load_dotenv(dotenv_path)
 MQTT_USER = os.environ.get('MQTT_USER')
 MQTT_PASSWORD = os.environ.get('MQTT_PASSWORD')
 MQTT_HOST = os.environ.get('MQTT_HOST')
-MQTT_PORT = os.environ.get('MQTT_PORT')
+MQTT_PORT = int(os.environ.get('MQTT_PORT'))
 
 # Global variable definition
 flag_connected = 0      # Loop flag for waiting to connect to MQTT broker
