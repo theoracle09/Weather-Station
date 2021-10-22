@@ -177,7 +177,7 @@ if __name__ == '__main__':
         sys_uptime = uptime()
 
         # Debugging (used when testing and need to print variables)
-        print(last_message, wind_speed, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp, sys_uptime)
+        #print(last_message, wind_speed, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp, sys_uptime)
 
         # Create JSON dict for MQTT transmission
         send_msg = {
