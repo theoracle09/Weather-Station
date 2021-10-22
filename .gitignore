@@ -6,3 +6,6 @@ __pycache__/
 
 # Exclude testing.py script
 testing.py
+
+# Exclude .env
+*.env

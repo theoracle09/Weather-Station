@@ -1,5 +1,7 @@
+from dotenv import load_dotenv
 from gpiozero import Button
 from gpiozero import CPUTemperature
+from os.path import join, dirname
 import time
 import math
 import statistics
@@ -8,7 +10,15 @@ import wind_direction_byo
 import ds18b20_therm
 import paho.mqtt.client as mqtt
 import json
+import os
 from datetime import datetime
+
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+# Load .env variables
+MQTT_USER = os.environ.get('MQTT_USER')
+MQTT_PASSWORD = os.environ.get('MQTT_PASSWORD')
 
 # Global variable definition
 flag_connected = 0      # Loop flag for waiting to connect to MQTT broker
@@ -16,6 +26,7 @@ flag_connected = 0      # Loop flag for waiting to connect to MQTT broker
 # Constant variable definition
 MQTT_HOST = "192.168.1.16"
 MQTT_PORT = 1883
+MQTT_TOPIC = "raspberry/ws/sensors"
 BUCKET_SIZE = 0.2794     # Volume of rain required to tip rain meter one time
 RAINFALL_METRIC = 1      # Measure rainfall in inches or mm. For inches change to 0.
 
@@ -50,7 +61,14 @@ def on_disconnect(client, userdata, rc):
 client = mqtt.Client("WX")
 client.on_connect = on_connect
 client.on_disconnect = on_disconnect
-client.connect(MQTT_HOST, MQTT_PORT) 
+client.username_pw_set(MQTT_USER, MQTT_PASSWORD)
+client.connect(MQTT_HOST, MQTT_PORT)
+
+# System Uptime
+def uptime():
+    t = os.popen('uptime -p').read()[:-1]
+    uptime = t.replace('up ', '')
+    return uptime
 
 # Every half-rotation, add 1 to count
 def spin():
@@ -155,8 +173,11 @@ if __name__ == '__main__':
         # Format message timestamp to mm/dd/YY H:M:S
         last_message = now.strftime("%m/%d/%Y %H:%M:%S")
 
+        # Get current system uptime
+        sys_uptime = uptime()
+
         # Debugging (used when testing and need to print variables)
-        #print(last_message, wind_speed, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp)
+        print(last_message, wind_speed, rainfall, wind_direction, humidity, pressure, ambient_temp, ground_temp, sys_uptime)
 
         # Create JSON dict for MQTT transmission
         send_msg = {
@@ -168,14 +189,15 @@ if __name__ == '__main__':
             'ambient_temp': ambient_temp,
             'ground_temp': ground_temp,
             'last_message': last_message,
-            'cpu_temp': cpu_temp
+            'cpu_temp': cpu_temp,
+            'system_uptime': sys_uptime
         }
 
         # Convert message to json
         payload = json.dumps(send_msg)
 
         # Publish to mqtt
-        client.publish("raspberry/ws/sensors", payload, qos=0)
+        client.publish(MQTT_TOPIC, payload, qos=0)
 
         # Reset wind speed list, wind direction list, and rainfall max
         store_speeds = []
