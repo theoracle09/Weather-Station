@@ -31,7 +31,7 @@ BUCKET_SIZE = 0.2794     # Volume of rain required to tip rain meter one time
 RAINFALL_METRIC = 1      # Measure rainfall in inches or mm. For inches change to 0.
 
 CM_IN_A_KM = 100000.0
-SECS_IN_A_HOUR = 3600
+SECS_IN_AN_HOUR = 3600
 
 # Initialize ground temp probe
 temp_probe = ds18b20_therm.DS18B20()
@@ -85,7 +85,7 @@ def calculate_speed(time_sec):
     dist_km = (circumference_cm * rotations) / CM_IN_A_KM
     
     km_per_sec = dist_km / time_sec
-    km_per_hour = 1.18 * (km_per_sec * SECS_IN_A_HOUR) # Multiply wind speed by 'anemometer factor'
+    km_per_hour = 1.18 * (km_per_sec * SECS_IN_AN_HOUR) # Multiply wind speed by 'anemometer factor'
 
     # Convert KMH to MPH
     mph = 0.6214 * km_per_hour
