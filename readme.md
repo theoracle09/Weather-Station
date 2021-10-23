@@ -60,6 +60,8 @@ Replace username and password with the credentials for your MQTT server. Add you
 
 ## Running Script When Pi Starts
 
+**NOTE:** I strongly advise you to run the main weather_station.py program in your IDE or through SSH before you start trying to get the program to launch when the raspi boots. You will be able to diagnose any problems or error messages much easier than taking guesses as to why the raspi isn't launching the main python file. Trust me: it will save you a lot of time and headache. 
+
 These were the steps I had to take so the weather station script will run on boot. SSH into your raspberry pi and type the following to create a new system service:
 
 ```
