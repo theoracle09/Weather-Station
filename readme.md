@@ -41,7 +41,7 @@ I also used this 3D printed [radiation shield](https://www.thingiverse.com/thing
 
 ## MQTT Configuration
 
-The MQTT configuration requires an environment file for username, password, host ip, and port. You can hardcode these in if you really want by finding the MQTT constant variables in weather_station.py and defining them there. To use the environment variables, start by installing the dotenv library by SSHing into your raspberry pi and typing the following:
+The MQTT configuration requires an environment file for username, password, host ip, and port. You can hardcode these in if you really want by finding the MQTT constant variables in weather_station.py and defining them there. To use the environment variables, start by installing the dotenv library by SSHing into your raspi and typing the following:
 
 ```
 sudo pip3 install -U python-dotenv
