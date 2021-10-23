@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 import os, glob, time
 
 # add the lines below to /etc/modules (reboot to take effect)

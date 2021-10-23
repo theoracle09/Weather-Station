@@ -6,7 +6,7 @@ import time
 import math
 import statistics
 import bme280_sensor
-import wind_direction_byo
+import wind_direction
 import ds18b20_therm
 import paho.mqtt.client as mqtt
 import json
@@ -142,14 +142,14 @@ if __name__ == '__main__':
             wind_start_time = time.time()
             reset_wind()
             while time.time() - wind_start_time <= wind_interval:
-                store_directions.append(wind_direction_byo.get_value())
+                store_directions.append(wind_direction.get_value())
             
             final_speed = calculate_speed(wind_interval)
             store_speeds.append(final_speed)
 
         wind_speed = round(statistics.mean(store_speeds), 1)
         rainfall = rain_count * BUCKET_SIZE
-        wind_direction = wind_direction_byo.get_average(store_directions)
+        wind_direction = wind_direction.get_average(store_directions)
         ground_temp = temp_probe.read_temp()
         
         humidity, pressure, ambient_temp = bme280_sensor.read_all()
