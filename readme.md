@@ -83,7 +83,7 @@ ExecStart=/usr/bin/python3 /home/pi/weather-station/weather_station.py > /home/p
 WantedBy=multi-user.target
 ```
 
-**NOTICE:** This program uses python3, so it's explicitly called within the ExecStart command. Also note the absolute file path to the weather station main program, along with absolute path to any error log output.
+**NOTICE:** This program uses python3, so it's explicitly called within the ExecStart command. Also note the absolute file path to the weather station main program, along with absolute path to any error log output. You need to update this path to the location of your main weather station python program if it's different from mine. 
 
 TODO: The ExecStartPre command is executed because the service consistently started before the network services were active and made the program error out and fail. Having the service require a single ping out before startup ensures the pi is indeed connected to the internet before it attempts to connect via MQTT. This will most likely be changed in the future because the connection error needs to be handled at the program level, not the service level. I also don't want to rely on it connecting outside of the local network, so it should check MQTT connection status before moving to main program loop as opposed to dialing outside the network.
 

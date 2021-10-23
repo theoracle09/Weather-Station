@@ -149,14 +149,14 @@ if __name__ == '__main__':
 
         wind_speed = round(statistics.mean(store_speeds), 1)
         rainfall = rain_count * BUCKET_SIZE
-        wind_direction = wind_direction.get_average(store_directions)
+        wind_dir = wind_direction.get_average(store_directions)
         ground_temp = temp_probe.read_temp()
         
         humidity, pressure, ambient_temp = bme280_sensor.read_all()
 
         # Round wind_direction, humidity, pressure, ambient_temp, ground_temp, and rainfall to 1 decimals 
         # and convert C readings to F
-        wind_direction = round(wind_direction)
+        wind_dir = round(wind_dir)
         humidity = round(humidity, 1)
         pressure = round(pressure, 1)
         ambient_temp = celsius_to_f(round(ambient_temp, 1))
@@ -183,7 +183,7 @@ if __name__ == '__main__':
         send_msg = {
             'wind_speed': wind_speed,
             'rainfall': rainfall,
-            'wind_direction': wind_direction,
+            'wind_direction': wind_dir,
             'humidity': humidity,
             'pressure': pressure,
             'ambient_temp': ambient_temp,
