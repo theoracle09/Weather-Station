@@ -26,7 +26,8 @@ MQTT_PORT = int(os.environ.get('MQTT_PORT'))
 flag_connected = 0      # Loop flag for waiting to connect to MQTT broker
 
 # Constant variable definition
-MQTT_TOPIC = "raspberry/ws/sensors"
+MQTT_STATUS_TOPIC = "raspberry/ws/status"
+MQTT_SENSORS_TOPIC = "raspberry/ws/sensors"
 BUCKET_SIZE = 0.2794     # Volume of rain required to tip rain meter one time
 RAINFALL_METRIC = 1      # Measure rainfall in inches or mm. For inches change to 0.
 
@@ -194,10 +195,16 @@ if __name__ == '__main__':
         }
 
         # Convert message to json
-        payload = json.dumps(send_msg)
+        payload_sensors = json.dumps(send_msg)
 
-        # Publish to mqtt
-        client.publish(MQTT_TOPIC, payload, qos=0)
+        # Set status payload
+        payload_status = "Online"
+
+        # Publish status to mqtt
+        client.publish(MQTT_STATUS_TOPIC, payload_status, qos=0)
+
+        # Publish sensor data to mqtt
+        client.publish(MQTT_SENSORS_TOPIC, payload_sensors, qos=0)
 
         # Reset wind speed list, wind direction list, and rainfall max
         store_speeds = []
