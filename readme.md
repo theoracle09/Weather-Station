@@ -112,3 +112,88 @@ Restart the pi and once the network services are loaded, the script should run a
 ```
 sudo systemctl status weatherstation.service
 ```
+
+## Home Assistant Implementation
+
+To get the sensor data into Home Assistant you need to create an MQTT sensor within your Home Assistant configuration file. The best way to do this (if you haven't already) is to create a new file in your Home Assistant config folder named 'sensors.yaml'. In your configuration.yaml file add this line: 
+
+```
+sensor: !include sensors.yaml
+```
+
+Next, create a new file named sensors.yaml and paste the following into it to start listening on the MQTT topics that you defined in the main weatherstation.py program:
+
+```
+# Weather Station
+- platform: mqtt
+  name: "Weather Station"
+  state_topic: "raspberry/ws/status"
+  json_attributes_topic: "raspberry/ws/sensors"
+```
+
+This will create a new sensor in Home Assistant with the name "sensor.weather_station". 
+
+**NOTE:** You need to make sure the state_topic and the json_attributes_topic in this sensor match the topics in the main weatherstation.py file on the raspberry pi. If they don't match, Home Assistant won't be able to 'hear' the broadcast because it's listening on the wrong topics. 
+
+Next, you need to break out the main sensor.weather_station attributes into their own sensors so they can be displayed on a dashboard that you create. To do this, create a new file named "template.yaml" (if you don't already have one) and add the following line to your configuration.yaml:
+
+```
+template: !include template.yaml
+```
+
+In the new template.yaml file you've created paste the following:
+
+```
+# Weather Station
+
+- sensor:
+    - name: "Local Ambient Temp"
+      state: "{{ state_attr('sensor.weather_station', 'ambient_temp') | float | round(1) }}"
+      icon: mdi:thermometer
+      unit_of_measurement: °F
+
+    - name: "Local Ground Temp"
+      state: "{{ state_attr('sensor.weather_station', 'ground_temp') | float | round(1) }}"
+      icon: mdi:thermometer
+      unit_of_measurement: °F
+
+    - name: "Local Wind Speed"
+      state: "{{ state_attr('sensor.weather_station', 'wind_speed') | float }}"
+      icon: mdi:weather-windy
+      unit_of_measurement: mph
+
+    - name: "Local Rainfall"
+      state: "{{ state_attr('sensor.weather_station', 'rainfall') | float }}"
+      icon: mdi:water
+      unit_of_measurement: '"'
+
+    - name: "Local Wind Direction"
+      state: "{{ state_attr('sensor.weather_station', 'wind_direction') | float }}"
+      icon: mdi:compass
+
+    - name: "Local Humidity"
+      state: "{{ state_attr('sensor.weather_station', 'humidity') | float | round(1) }}"
+      icon: mdi:water-percent
+      unit_of_measurement: "%"
+
+    - name: "Local Pressure"
+      state: "{{ state_attr('sensor.weather_station', 'pressure') | float }}"
+      icon: mdi:gauge
+      unit_of_measurement: ""
+
+    - name: "Last Message"
+      state: "{{ state_attr('sensor.weather_station', 'last_message') }}"
+      icon: mdi:clock
+
+    - name: "WX CPU Temp"
+      state: "{{ state_attr('sensor.weather_station', 'cpu_temp') }}"
+      icon: mdi:thermometer
+      unit_of_measurement: °F
+
+    - name: "WX Uptime"
+      state: "{{ state_attr('sensor.weather_station', 'system_uptime') }}"
+      icon: mdi:sort-clock-descending
+      unit_of_measurement: ""
+```
+
+This is what gives you all the individual sensors that can be used as entities within a Home Assistant dashboard. The name of each is how you find the sensor name. For example, for the last sensor in the template, WX Uptime, this data will be in the "sensor.wx_uptime" sensor. For WX CPU Temp, you'll be able to display it with "sensor.wx_cpu_temp", etc etc. 
