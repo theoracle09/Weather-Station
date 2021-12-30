@@ -1,9 +1,5 @@
 # Raspberry Pi Weather Station with MQTT
 
-## TODO
-
-- Make future features list / section (if any)
-
 ## About
 
 This project takes the [official Raspberry Pi Weather Station](https://projects.raspberrypi.org/en/projects/build-your-own-weather-station) and removes all the extra files dealing with Oracle, along with some new features. The raspi broadcasts the sensor data as a JSON dict over MQTT and is displayed in a [Home Assistant](https://www.home-assistant.io/) dashboard.
@@ -26,6 +22,12 @@ The following sensors are broadcast as a JSON dict over MQTT, and displayed in a
 - System uptime
 
 Home Assistant uses the [utitilty meter integration](https://www.home-assistant.io/integrations/utility_meter/) to track hourly, daily, and weekly rainfall. Node Red saves the max daily wind speed as wind gust to a local file so as to be persistent over Home Assistant restarts. Node Red resets the max daily wind gust every day at midnight. 
+
+## Planned Features
+
+- Lightning detection module support
+- Ability to choose F or C temperature read outs (this is coming soon-ish)
+- Cooling fan install/logic based on WX station cpu temperature
 
 ## Hardware List
 
