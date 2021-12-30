@@ -1,5 +1,17 @@
 # Raspberry Pi Weather Station with MQTT
 
+## Table of Contents
+
+  * [About](#about)
+  * [Feature List](#feature-list)
+  * [Planned Features](#planned-features)
+  * [Hardware List](#hardware-list)
+  * [MQTT Configuration](#mqtt-configuration)
+  * [Running Script When Pi Starts](#running-script-when-pi-starts)
+  * [Home Assistant Implementation](#home-assistant-implementation)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 ## About
 
 This project takes the [official Raspberry Pi Weather Station](https://projects.raspberrypi.org/en/projects/build-your-own-weather-station) and removes all the extra files dealing with Oracle, along with some new features. The raspi broadcasts the sensor data as a JSON dict over MQTT and is displayed in a [Home Assistant](https://www.home-assistant.io/) dashboard.
