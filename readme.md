@@ -127,20 +127,19 @@ sudo systemctl status weatherstation.service
 
 ## Home Assistant Implementation
 
-To get the sensor data into Home Assistant you need to create an MQTT sensor within your Home Assistant configuration file. The best way to do this (if you haven't already) is to create a new file in your Home Assistant config folder named 'sensors.yaml'. In your configuration.yaml file add this line: 
+To get the sensor data into Home Assistant you need to create an MQTT sensor within your Home Assistant configuration file. The best way to do this (if you haven't already) is to create a new file in your Home Assistant config folder named 'mqtt.yaml'. In your configuration.yaml file add this line: 
 
 ```
-sensor: !include sensors.yaml
+mqtt: !include mqtt.yaml
 ```
 
-Next, create a new file named sensors.yaml and paste the following into it to start listening on the MQTT topics that you defined in the main weatherstation.py program:
+Next, create the new file named mqtt.yaml and paste the following into it to start listening on the MQTT topics that you defined in the main weatherstation.py program:
 
 ```
-# Weather Station
-- platform: mqtt
-  name: "Weather Station"
-  state_topic: "raspberry/ws/status"
-  json_attributes_topic: "raspberry/ws/sensors"
+sensor:
+  - name: "Weather Station"
+    state_topic: "raspberry/ws/status"
+    json_attributes_topic: "raspberry/ws/sensors"
 ```
 
 This will create a new sensor in Home Assistant with the name "sensor.weather_station". 
